@@ -1,5 +1,9 @@
-﻿public class SimpleQueue {
-    public static void Run() {
+﻿using System.Diagnostics;
+
+public class SimpleQueue
+{
+    public static void Run()
+    {
         // Test Cases
 
         // Test 1
@@ -9,6 +13,7 @@
         var queue = new SimpleQueue();
         queue.Enqueue(100);
         var value = queue.Dequeue();
+        Trace.Assert(value == 100, "Expected value to be 100");
         Console.WriteLine(value);
         // Defect(s) Found:
 
@@ -22,13 +27,19 @@
         queue.Enqueue(200);
         queue.Enqueue(300);
         queue.Enqueue(400);
+
         value = queue.Dequeue();
+        Trace.Assert(value == 200, "Expected value to be 200");
         Console.WriteLine(value);
+
         value = queue.Dequeue();
+        Trace.Assert(value == 300, "Expected value to be 300");
         Console.WriteLine(value);
+
         value = queue.Dequeue();
+        Trace.Assert(value == 400, "Expected value to be 400");
         Console.WriteLine(value);
-        // Defect(s) Found: 
+        // Defect(s) Found:
 
         Console.WriteLine("------------");
 
@@ -37,14 +48,17 @@
         // Expected Result: An exception should be raised
         Console.WriteLine("Test 3");
         queue = new SimpleQueue();
-        try {
+
+        try
+        {
             queue.Dequeue();
-            Console.WriteLine("Oops ... This shouldn't have worked.");
+            Trace.Assert(false, "Expected an exception to be thrown.");
         }
-        catch (IndexOutOfRangeException) {
+        catch (IndexOutOfRangeException)
+        {
             Console.WriteLine("I got the exception as expected.");
         }
-        // Defect(s) Found: 
+        // Defect(s) Found:
     }
 
     private readonly List<int> _queue = new();
@@ -53,7 +67,8 @@
     /// Enqueue the value provided into the queue
     /// </summary>
     /// <param name="value">Integer value to add to the queue</param>
-    private void Enqueue(int value) {
+    private void Enqueue(int value)
+    {
         _queue.Insert(0, value);
     }
 
@@ -62,12 +77,13 @@
     /// </summary>
     /// <exception cref="IndexOutOfRangeException">If queue is empty</exception>
     /// <returns>First integer in the queue</returns>
-    private int Dequeue() {
+    private int Dequeue()
+    {
         if (_queue.Count <= 0)
             throw new IndexOutOfRangeException();
 
-        var value = _queue[1];
-        _queue.RemoveAt(1);
+        var value = _queue[_queue.Count - 1];
+        _queue.RemoveAt(_queue.Count - 1);
         return value;
     }
 }
