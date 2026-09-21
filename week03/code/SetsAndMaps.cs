@@ -22,7 +22,22 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        HashSet<string> wordsSeen=new HashSet<string>();
+        List<string> pairs=new List<string>();
+        for(int i = 0; i < words.Length; i++)
+        {
+            string wordNeeded="" + words[i][1] + words[i][0];
+
+            if (wordsSeen.Contains(wordNeeded))
+            {
+                pairs.Add(wordNeeded + "&" +words[i]);
+            }
+            else
+            {
+                wordsSeen.Add(words[i]);
+            }
+        }
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -43,6 +58,16 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            var degree=fields[3]; // start here
+            if(!degrees.ContainsKey(degree))
+            {
+                degrees[degree]=1;
+            }
+            else
+            {
+                degrees[degree]+=1;
+            }
+            
         }
 
         return degrees;
@@ -66,8 +91,59 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // Ignore spaces and letter case
+        word1 = word1.Replace(" ", "").ToLower();
+        word2 = word2.Replace(" ", "").ToLower();
+
+        // Both words must have the same number of letters
+        if (word1.Length != word2.Length)
+        {
+            return false;
+        }
+
+
+        // Create a dictionary to store each letter and its count
+        Dictionary<char, int> letters = new Dictionary<char, int>();
+
+        // Count the letters in word1
+        for (int i = 0; i < word1.Length; i++)
+        {
+            char letter = word1[i];
+
+            if (letters.ContainsKey(letter))
+            {
+                letters[letter] += 1;
+            }
+            else
+            {
+                letters[letter] = 1;
+            }
+        }
+
+         // Check the letters in word2
+         for (int i = 0; i < word2.Length; i++)
+        {
+        char letter = word2[i];
+
+        // If the letter wasn't in word1, they cannot be anagrams
+        if (!letters.ContainsKey(letter))
+         {
+            return false;
+         }
+
+         // Use up one occurrence of this letter
+            letters[letter] -= 1;
+
+        // If we have used more letters than word1 contained,
+        // they cannot be anagrams
+        if (letters[letter] < 0)
+         {
+            return false;
+         }
+        }
+
+        // If all letters matched, they are anagrams
+        return true;
     }
 
     /// <summary>
@@ -101,6 +177,14 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
-    }
+        List<string> earthquakes = new List<string>();
+
+        foreach (var feature in featureCollection.Features)
+        {
+           earthquakes.Add($"{feature.Properties.Place} - Mag {feature.Properties.Mag}");
+        }
+
+        return earthquakes.ToArray();
+                
+        }
 }
